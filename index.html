@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FAF7F2">
+<meta name="description" content="第一次帶寶寶出國也不慌張！給 1–3 歲寶寶爸媽的免費互動打包清單，可勾選、可新增用品、自動儲存。">
+<meta property="og:title" content="Tina 媽媽的寶寶出國打包清單">
+<meta property="og:description" content="第一次帶寶寶出國也不慌張，一起把行李準備好！可勾選、自動儲存的免費打包清單。">
+<meta property="og:type" content="website">
+<meta name="apple-mobile-web-app-title" content="寶寶打包清單">
+<meta name="format-detection" content="telephone=no">
+<title>Tina 媽媽的寶寶出國打包清單</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23EDE3D7'/%3E%3Crect x='16' y='22' width='32' height='28' rx='6' fill='none' stroke='%235C493C' stroke-width='4'/%3E%3Cpath d='M25 22v-5a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v5' fill='none' stroke='%235C493C' stroke-width='4'/%3E%3Cpath d='M24 36l6 5 10-11' fill='none' stroke='%23B99A7B' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#FAF7F2;
+  --main:#B99A7B;
+  --brown:#5C493C;
+  --card:#FFFFFF;
+  --sub:#EDE3D7;
+  --sub-2:#F4EDE4;
+  --muted:#7E6A5B;
+  --faded:#B3A496;
+  --line:#E8DED2;
+  --ok:#8E9B7A;
+  --danger:#A4614F;
+  --radius:20px;
+  --radius-sm:14px;
+  --shadow:0 1px 2px rgba(92,73,60,.04),0 6px 20px rgba(92,73,60,.06);
+  --font:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--brown);
+  font-family:var(--font);font-size:16px;line-height:1.6;letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);
+}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+svg{display:block}
+.wrap{max-width:680px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom))}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(232,222,210,.7)}
+
+/* ---------- Hero ---------- */
+.hero{text-align:center;padding:10px 4px 18px}
+.brand{display:inline-flex;align-items:center;gap:6px;font-size:13px;letter-spacing:.12em;color:var(--main);font-weight:600;text-transform:none}
+.brand svg{width:16px;height:16px}
+.hero-art{width:min(250px,70%);height:auto;margin:14px auto 6px;color:var(--brown)}
+h1{font-size:clamp(24px,6.6vw,32px);line-height:1.3;margin:6px 0 8px;font-weight:700;letter-spacing:.02em}
+.subtitle{margin:0 auto;max-width:28em;color:var(--muted);font-size:15px}
+
+/* ---------- Progress ---------- */
+.progress-card{padding:20px 20px 18px;margin-bottom:14px}
+.eyebrow{margin:0 0 10px;font-weight:700;font-size:17px;display:flex;align-items:center;gap:8px}
+.eyebrow svg{width:22px;height:22px;color:var(--main)}
+.nums{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;font-size:15px;color:var(--muted)}
+.nums b{color:var(--brown);font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.nums .pct b{font-size:26px}
+.bar{height:14px;background:var(--sub);border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;width:0;background:linear-gradient(90deg,#CBB08F,var(--main));border-radius:999px;transition:width .35s ease}
+.progress-msg{margin:12px 0 0;font-size:14px;color:var(--muted);min-height:1.6em}
+.progress-card.complete{background:#FFFCF7;border-color:var(--main)}
+.progress-card.complete .progress-msg{color:var(--brown);font-weight:700;font-size:16px}
+.progress-card.complete .bar-fill{background:linear-gradient(90deg,#B99A7B,#9C7E62)}
+.storage-note{margin:10px 0 0;font-size:12.5px;color:var(--faded);line-height:1.5}
+.storage-note.warn{color:var(--danger)}
+
+/* sticky mini progress */
+.mini{
+  position:fixed;left:0;right:0;top:0;z-index:30;
+  background:rgba(250,247,242,.94);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid var(--line);
+  padding:calc(8px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) 8px calc(16px + env(safe-area-inset-left));
+  transform:translateY(-110%);transition:transform .25s ease;
+}
+.mini.show{transform:none}
+.mini-in{max-width:648px;margin:0 auto;display:flex;align-items:center;gap:12px;font-size:13.5px;font-variant-numeric:tabular-nums}
+.mini-in .bar{flex:1;height:8px}
+.mini-txt{white-space:nowrap;font-weight:600}
+
+/* ---------- Toolbar ---------- */
+.toolbar{padding:14px;margin-bottom:18px;display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.toolbar > *{min-width:0}
+.seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));background:var(--sub-2);border-radius:14px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:11px;min-height:42px;font-size:15px;color:var(--muted);font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--brown);box-shadow:0 1px 4px rgba(92,73,60,.12)}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.row-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:360px){.btn{padding:0 6px;gap:4px;font-size:13.5px}.btn svg{width:16px;height:16px}.seg button{font-size:14px}.toolbar{padding:12px}}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line);
+  background:var(--card);color:var(--brown);font-size:14.5px;font-weight:600;white-space:nowrap;
+  touch-action:manipulation;transition:background .15s;
+}
+.btn svg{width:18px;height:18px;flex:none}
+.btn:active{background:var(--sub-2)}
+.btn-primary{background:var(--brown);border-color:var(--brown);color:#fff}
+.btn-primary:active{background:#4A3A30}
+.btn-soft{background:var(--sub);border-color:var(--sub)}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn-danger{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn-reset{color:var(--danger)}
+:focus-visible{outline:3px solid rgba(185,154,123,.55);outline-offset:2px}
+
+.switch-row{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--sub-2);border-radius:14px;cursor:pointer;touch-action:manipulation}
+.switch-row .sw-icon{width:30px;height:30px;color:#8BA3B5;flex:none}
+.switch-text{flex:1;min-width:0}
+.switch-text strong{display:block;font-size:15px}
+.switch-text span{display:block;font-size:12.5px;color:var(--muted);line-height:1.4}
+.switch{position:relative;width:52px;height:32px;flex:none}
+.switch input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.switch .track{position:absolute;inset:0;border-radius:999px;background:#D9CCBD;transition:background .2s}
+.switch .thumb{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.18);transition:transform .2s}
+.switch input:checked ~ .track{background:var(--main)}
+.switch input:checked ~ .thumb{transform:translateX(20px)}
+.switch input:focus-visible ~ .track{outline:3px solid rgba(185,154,123,.55);outline-offset:2px}
+
+/* ---------- Categories ---------- */
+.list{display:grid;gap:12px}
+.cat{overflow:hidden}
+.cat-h{margin:0;font-size:inherit}
+.cat-head{
+  width:100%;display:flex;align-items:center;gap:12px;text-align:left;
+  padding:14px 16px;min-height:64px;border:0;background:transparent;touch-action:manipulation;
+}
+.cat-icon{width:40px;height:40px;border-radius:13px;background:var(--sub-2);display:grid;place-items:center;flex:none;color:var(--brown)}
+.cat-icon svg{width:24px;height:24px}
+.cat-winter .cat-icon{background:#EEF2F4;color:#6F8A9C}
+.cat-title{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.cat-no{font-size:12px;color:var(--main);font-weight:700;letter-spacing:.08em}
+.cat-name{font-size:16.5px;font-weight:700}
+.cat-count{font-variant-numeric:tabular-nums;font-size:14px;font-weight:700;color:var(--muted);background:var(--sub-2);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.cat.all-done .cat-count{background:var(--brown);color:#fff}
+.chev{width:22px;height:22px;color:var(--main);transition:transform .2s;flex:none}
+.cat-head[aria-expanded="false"] .chev{transform:rotate(-90deg)}
+.cat-body{padding:0 10px 12px;border-top:1px solid var(--sub-2)}
+.items{list-style:none;margin:0;padding:6px 0 0}
+.item{display:flex;align-items:center}
+.item + .item{border-top:1px dashed var(--sub-2)}
+.item-row{
+  flex:1;min-width:0;display:flex;align-items:center;gap:13px;
+  padding:11px 8px;min-height:52px;cursor:pointer;border-radius:14px;
+  touch-action:manipulation;-webkit-user-select:none;user-select:none;position:relative;
+}
+.item-row:active{background:var(--sub-2)}
+.cb{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.box{
+  width:26px;height:26px;border-radius:8px;border:2px solid #CDB9A3;background:#fff;flex:none;
+  display:grid;place-items:center;transition:background .15s,border-color .15s;
+}
+.box svg{width:16px;height:16px;color:#fff;opacity:0;transform:scale(.6);transition:opacity .15s,transform .15s}
+.cb:checked + .box{background:var(--main);border-color:var(--main)}
+.cb:checked + .box svg{opacity:1;transform:none}
+.cb:focus-visible + .box{outline:3px solid rgba(185,154,123,.55);outline-offset:2px}
+.item-text{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;column-gap:8px;row-gap:2px;font-size:16px;word-break:break-word}
+.item-note{font-size:12.5px;color:var(--muted);background:var(--sub-2);border-radius:6px;padding:0 7px;line-height:1.7}
+.item-tag{font-size:11.5px;color:var(--main);border:1px solid var(--main);border-radius:6px;padding:0 6px;line-height:1.6}
+.item.done .item-name{color:var(--faded);text-decoration:line-through;text-decoration-color:#C9B8A6;text-decoration-thickness:1.5px}
+.item.done .item-note,.item.done .item-tag{opacity:.55}
+.del{
+  flex:none;width:44px;height:44px;border:0;background:transparent;border-radius:12px;color:var(--faded);
+  display:grid;place-items:center;margin-right:2px;touch-action:manipulation;
+}
+.del svg{width:19px;height:19px}
+.del:active{background:#F6E9E4;color:var(--danger)}
+
+.all-done-note{display:none;margin:8px 8px 4px;padding:12px;border-radius:14px;background:var(--sub-2);color:var(--muted);font-size:14px;text-align:center}
+.filter-todo .item.done:not(.lingering){display:none}
+.filter-todo .cat.none-left .all-done-note{display:block}
+.item.lingering{opacity:.6;transition:opacity .4s}
+
+.add-wrap{padding:8px 4px 0}
+.add-open{
+  width:100%;min-height:46px;border:1.5px dashed #D6C5B2;border-radius:14px;background:transparent;
+  color:var(--main);font-weight:700;font-size:15px;touch-action:manipulation;
+}
+.add-open:active{background:var(--sub-2)}
+.add-form{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center}
+.add-form[hidden]{display:none}
+.add-input{
+  width:100%;min-width:0;min-height:46px;padding:0 14px;border-radius:12px;border:1.5px solid var(--line);
+  background:#fff;font-size:16px; /* 16px 避免 iOS 自動放大 */
+  -webkit-appearance:none;appearance:none;
+}
+.add-input:focus{outline:none;border-color:var(--main);box-shadow:0 0 0 3px rgba(185,154,123,.22)}
+.add-hint{grid-column:1/-1;margin:0;font-size:13px;color:var(--danger);min-height:0}
+.add-hint:empty{display:none}
+
+/* ---------- Tips ---------- */
+.tips{margin-top:34px}
+.section-head{display:flex;align-items:center;gap:10px;margin:0 4px 6px}
+.section-head svg{width:28px;height:28px;color:#7D97A8;flex:none}
+.section-head h2{margin:0;font-size:20px}
+.section-sub{margin:0 4px 14px;font-size:13.5px;color:var(--muted)}
+.tip-grid{display:grid;gap:10px}
+.tip{padding:16px 18px;display:flex;gap:14px}
+.tip-no{font-size:22px;font-weight:700;color:var(--main);line-height:1.2;font-variant-numeric:tabular-nums;flex:none;width:30px}
+.tip h3{margin:0 0 4px;font-size:16px;line-height:1.4}
+.tip p{margin:0;font-size:14.5px;color:var(--muted);line-height:1.65}
+
+/* ---------- Footer ---------- */
+.footer{text-align:center;margin-top:40px;padding:26px 10px 8px;border-top:1px solid var(--line)}
+.footer .made{font-weight:700;font-size:15px;margin:0 0 6px}
+.footer .heart{color:#C98E7E}
+.footer .quote{margin:0 0 16px;color:var(--muted);font-size:14.5px}
+.ig{display:inline-flex;align-items:center;gap:8px;text-decoration:none;padding:10px 18px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:600;font-size:14.5px;min-height:44px}
+.ig svg{width:18px;height:18px}
+.footer .small{margin:18px 0 0;font-size:12px;color:var(--faded)}
+
+/* ---------- Toast & Modal ---------- */
+.toast{
+  position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));z-index:50;
+  transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+  background:var(--brown);color:#fff;border-radius:14px;padding:12px 16px;font-size:14.5px;
+  display:flex;align-items:center;gap:14px;max-width:calc(100% - 32px);width:max-content;box-shadow:0 8px 24px rgba(60,45,35,.25);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:9px;padding:6px 12px;font-weight:700;font-size:14px;min-height:34px}
+.modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;background:rgba(60,45,35,.38)}
+.modal[hidden]{display:none}
+.modal-box{width:100%;max-width:380px;padding:24px 22px 18px;text-align:center}
+.modal-box .m-icon{width:52px;height:52px;margin:0 auto 10px;border-radius:16px;background:var(--sub-2);display:grid;place-items:center;color:var(--danger)}
+.modal-box .m-icon svg{width:28px;height:28px}
+.modal-box h2{margin:0 0 6px;font-size:19px}
+.modal-box p{margin:0 0 14px;color:var(--muted);font-size:14.5px}
+.modal-check{display:flex;align-items:center;gap:10px;justify-content:center;font-size:14px;color:var(--muted);margin:0 0 18px;cursor:pointer;min-height:40px}
+.modal-check input{width:20px;height:20px;accent-color:var(--danger);margin:0}
+.modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+.print-head{display:none}
+
+/* ---------- Larger screens ---------- */
+@media (min-width:720px){
+  .wrap{padding-top:36px}
+  .tip-grid{grid-template-columns:1fr 1fr}
+  .tip:last-child{grid-column:1/-1}
+  .toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .toolbar .switch-row{grid-column:1/-1}
+  .toolbar .row-3{grid-column:1/-1}
+}
+@media (hover:hover){
+  .item-row:hover{background:var(--sub-2)}
+  .btn:hover{background:var(--sub-2)}
+  .btn-primary:hover{background:#4A3A30}
+  .btn-danger:hover{background:#8F5242}
+  .del:hover{color:var(--danger);background:#F6E9E4}
+  .add-open:hover{background:var(--sub-2)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- Print ---------- */
+@media print{
+  @page{margin:12mm 11mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;font-size:11.5pt;padding:0}
+  .wrap{max-width:none;padding:0}
+  .no-print,.mini,.toolbar,.add-wrap,.del,.toast,.modal,.hero,.storage-note,.all-done-note,.chev{display:none!important}
+  .print-head{display:block;margin:0 0 4mm}
+  .print-head h1{font-size:17pt;margin:0}
+  .print-head p{margin:1mm 0 0;font-size:10pt;color:#7E6A5B}
+  .card{box-shadow:none;border:1px solid #DDD2C6}
+  .progress-card{padding:3mm 4mm;margin-bottom:4mm}
+  .progress-card .eyebrow svg{display:none}
+  .progress-card .bar{height:8px}
+  .list{display:block;columns:2;column-gap:6mm}
+  .cat{break-inside:avoid;page-break-inside:avoid;margin:0 0 4mm;display:block}
+  .cat[hidden]{display:none!important}
+  .cat-head{padding:2mm 3mm;min-height:0}
+  .cat-icon{width:24px;height:24px;border-radius:7px}
+  .cat-icon svg{width:16px;height:16px}
+  .cat-name{font-size:11.5pt}
+  .cat-count{font-size:9.5pt;padding:0 6px}
+  .cat-body[hidden]{display:block!important}
+  .cat-body{padding:0 3mm 2mm}
+  .filter-todo .item.done:not(.lingering){display:flex!important}
+  .item-row{padding:1.2mm 0;min-height:0;gap:8px}
+  .box{width:14px;height:14px;border-radius:4px;border-width:1.5px}
+  .box svg{width:10px;height:10px}
+  .item-text{font-size:10.5pt}
+  .item-note,.item-tag{font-size:8pt}
+  .tips{break-before:page;margin-top:0}
+  .tip{break-inside:avoid;padding:3mm 4mm}
+  .tip-grid{grid-template-columns:1fr 1fr;gap:3mm}
+  .tip:last-child{grid-column:auto}
+  .footer{margin-top:6mm;padding-top:4mm}
+  .ig{border:0;padding:0;min-height:0}
+}
+</style>
+</head>
+<body>
+
+<!-- 黏在上方的小進度條（滑動後出現） -->
+<div class="mini no-print" id="mini" aria-hidden="true">
+  <div class="mini-in">
+    <span class="mini-txt" id="miniTxt">0 / 0</span>
+    <div class="bar"><div class="bar-fill" id="miniFill"></div></div>
+    <span class="mini-txt" id="miniPct">0%</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="print-head">
+    <h1>Tina 媽媽的寶寶出國打包清單</h1>
+    <p>Tina’s Travel Notes ・ 列印日期：<span id="printDate"></span></p>
+  </div>
+
+  <header class="hero">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.8 13.6l6.1-1.3 4.6-6.9c.6-.9 1.9-1.2 2.8-.6.8.5 1 1.6.5 2.4l-3.9 6.6 1.5 5.4-1.9 1-2.7-4.6-4.6 1-1.7 1.9-1.4-.8.6-2.4z"/></svg>
+      Tina’s Travel Notes
+    </div>
+    <!-- 手繪感插圖：行李箱、奶瓶、飛機、雪花 -->
+    <svg class="hero-art" viewBox="0 0 260 130" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M18 104c40-3 182-3 224 0" stroke="#D9CBBB"/>
+      <path d="M150 34c18-14 44-20 66-14" stroke="#CDB9A3" stroke-dasharray="2 7"/>
+      <g transform="translate(212 8) rotate(12)">
+        <path d="M0 14l13-2.6 9.6-14c1.2-1.8 3.8-2.3 5.6-1.2 1.6 1 2.1 3.2 1 4.8L21.5 15l3 11-3.8 2-5.5-9.3-9.3 2-3.5 3.8-2.8-1.6 1.2-4.8z" fill="#FFFFFF"/>
+      </g>
+      <g>
+        <rect x="74" y="40" width="86" height="62" rx="12" fill="#EDE3D7"/>
+        <path d="M100 40v-9c0-3 2.4-5.4 5.4-5.4h22.2c3 0 5.4 2.4 5.4 5.4v9"/>
+        <path d="M96 41v61M138 41v61" stroke="#B99A7B"/>
+        <circle cx="84" cy="106" r="3.6" fill="#FFFFFF"/>
+        <circle cx="150" cy="106" r="3.6" fill="#FFFFFF"/>
+        <path d="M110 62c1.6-3.6 6.6-3.8 7.6.2 1-4 6-3.8 7.6-.2 1.6 3.8-3 7.6-7.6 10.4-4.6-2.8-9.2-6.6-7.6-10.4z" fill="#F3D9CF" stroke="#C98E7E" stroke-width="1.8"/>
+      </g>
+      <g transform="translate(178 46)">
+        <path d="M8 4.6c0-1.6 1.6-2.8 3.6-2.8s3.6 1.2 3.6 2.8V9H8z" fill="#F7EEE5"/>
+        <path d="M5 9h13.2v4.2H5z" fill="#B99A7B" stroke="#5C493C"/>
+        <path d="M6 13.2h11.2l1.2 3.4v31c0 2.6-2 4.6-4.6 4.6H9.4c-2.6 0-4.6-2-4.6-4.6v-31z" fill="#FFFFFF"/>
+        <path d="M11.6 23h4M11.6 29h4M11.6 35h4" stroke="#B99A7B"/>
+      </g>
+      <g stroke="#8BA3B5" stroke-width="1.8">
+        <path d="M40 46v20M31.3 51l17.4 10M31.3 61l17.4-10"/>
+        <path d="M37.2 47.8l2.8 2.2 2.8-2.2M37.2 64.2l2.8-2.2 2.8 2.2"/>
+      </g>
+      <g stroke="#B5C6D2" stroke-width="1.6">
+        <path d="M226 72v12M220.8 75l10.4 6M220.8 81l10.4-6"/>
+      </g>
+      <circle cx="58" cy="28" r="2" fill="#CDB9A3" stroke="none"/>
+      <circle cx="200" cy="96" r="2" fill="#CDB9A3" stroke="none"/>
+    </svg>
+    <h1>Tina 媽媽的<br>寶寶出國打包清單</h1>
+    <p class="subtitle">第一次帶寶寶出國也不慌張，一起把行李準備好！</p>
+  </header>
+
+  <main>
+    <section class="card progress-card" id="progressCard" aria-labelledby="progressTitle">
+      <p class="eyebrow" id="progressTitle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7.5" width="16" height="12.5" rx="3"/><path d="M9 7.5V5.6c0-.9.7-1.6 1.6-1.6h2.8c.9 0 1.6.7 1.6 1.6v1.9M8.5 13.5l2.4 2.2 4.6-4.6"/></svg>
+        今天打包完成多少了？
+      </p>
+      <div class="nums">
+        <span>已完成 <b id="doneN">0</b> / <b id="totalN">0</b> 項</span>
+        <span class="pct">完成度 <b id="pctN">0%</b></span>
+      </div>
+      <div class="bar" id="bar" role="progressbar" aria-label="打包完成度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="bar-fill" id="barFill"></div>
+      </div>
+      <p class="progress-msg" id="progressMsg" aria-live="polite"></p>
+      <p class="storage-note" id="storageNote">📌 勾選紀錄會自動存在這台裝置的瀏覽器裡，不需要登入。換手機／換瀏覽器不會同步；無痕模式或清除網站資料，紀錄可能會消失。</p>
+    </section>
+
+    <section class="card toolbar no-print" aria-label="清單工具">
+      <div class="seg" role="group" aria-label="顯示方式">
+        <button type="button" id="fAll" aria-pressed="true">顯示全部項目</button>
+        <button type="button" id="fTodo" aria-pressed="false">只看未完成</button>
+      </div>
+      <div class="row">
+        <button type="button" class="btn" id="expandAll">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9.5l5 5 5-5"/></svg>展開全部
+        </button>
+        <button type="button" class="btn" id="collapseAll">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 14.5l5-5 5 5"/></svg>收合全部
+        </button>
+      </div>
+      <label class="switch-row" for="winterToggle">
+        <svg class="sw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.8 4.6L12 6.4l2.2-1.8M9.8 19.4l2.2-1.8 2.2 1.8M4.5 10.6l2.7-.9-.5-2.8M19.5 13.4l-2.7.9.5 2.8M6.7 17.1l.5-2.8-2.7-.9M17.3 6.9l-.5 2.8 2.7.9"/></svg>
+        <span class="switch-text">
+          <strong>冬季旅行加強包</strong>
+          <span id="winterDesc">冬天出國再打開；關閉時不列入進度</span>
+        </span>
+        <span class="switch">
+          <input type="checkbox" id="winterToggle" role="switch">
+          <span class="track"></span><span class="thumb"></span>
+        </span>
+      </label>
+      <div class="row row-3">
+        <button type="button" class="btn" id="printBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V4h10v5"/><rect x="3.5" y="9" width="17" height="8" rx="2.2"/><path d="M7 14h10v6H7z"/></svg>列印／PDF
+        </button>
+        <button type="button" class="btn" id="shareBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M8 7.5L12 3.6l4 3.9"/><path d="M8 11H6.5A1.5 1.5 0 0 0 5 12.5v6A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5v-6a1.5 1.5 0 0 0-1.5-1.5H16"/></svg>分享
+        </button>
+        <button type="button" class="btn btn-reset" id="resetBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></svg>重設
+        </button>
+      </div>
+    </section>
+
+    <div class="list" id="list" aria-label="打包清單">
+      <noscript><p class="card" style="padding:20px">這個清單需要開啟 JavaScript 才能勾選喔。</p></noscript>
+    </div>
+
+    <section class="tips" aria-labelledby="tipsTitle">
+      <div class="section-head">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.8 4.6L12 6.4l2.2-1.8M9.8 19.4l2.2-1.8 2.2 1.8"/></svg>
+        <h2 id="tipsTitle">Tina 的北海道實測心得</h2>
+      </div>
+      <p class="section-sub">帶寶寶去北海道 5 天 4 夜的真實經驗分享（不列入打包進度）</p>
+      <div class="tip-grid">
+        <article class="card tip"><span class="tip-no">01</span><div><h3>尿布不用盲目帶太多</h3><p>5 天 4 夜帶了 35 片，回來剩約 10 片。建議依照寶寶平常用量，再多準備備用量。</p></div></article>
+        <article class="card tip"><span class="tip-no">02</span><div><h3>奶瓶內袋很方便</h3><p>使用拋棄式奶瓶內袋，喝完丟掉內袋，奶嘴頭仍需清洗。</p></div></article>
+        <article class="card tip"><span class="tip-no">03</span><div><h3>舊奶瓶的小方法</h3><p>這次另外帶了 5 支原本就準備淘汰、但仍完好可安全使用的奶瓶，用完後依當地規定處理。這是個人經驗，不代表所有家庭都需要這樣準備。</p></div></article>
+        <article class="card tip"><span class="tip-no">04</span><div><h3>雪地推車不一定好推</h3><p>遇到積雪或結冰時，可能需要抱寶寶或使用合適的背巾，注意行走安全。</p></div></article>
+        <article class="card tip"><span class="tip-no">05</span><div><h3>熟悉的小物很重要</h3><p>長時間搭車，準備寶寶熟悉的零食、玩具和安撫用品。</p></div></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p class="made">Made with <span class="heart">♡</span> by Tina</p>
+    <p class="quote">「帶寶寶旅行不一定輕鬆，但可以準備得更從容。」</p>
+    <a class="ig" href="https://www.instagram.com/tina__o.o/" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6" fill="currentColor"/></svg>
+      @tina__o.o
+    </a>
+    <p class="small">Tina’s Travel Notes ・ 清單僅供參考，請依寶寶狀況、目的地與航空公司規定調整。</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toastMsg"></span><button type="button" id="toastAction" hidden></button></div>
+
+<div class="modal" id="resetModal" hidden role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+  <div class="card modal-box">
+    <div class="m-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></svg></div>
+    <h2 id="resetTitle">確定要重設勾選紀錄嗎？</h2>
+    <p>所有項目會變回「未勾選」。<br>你自己新增的用品會保留下來。</p>
+    <label class="modal-check"><input type="checkbox" id="resetCustom">同時刪除我新增的用品</label>
+    <div class="modal-actions">
+      <button type="button" class="btn" id="resetCancel">取消</button>
+      <button type="button" class="btn btn-danger" id="resetConfirm">確定重設</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =========================================================
+     1. 清單資料
+     每項 ID = 分類ID + ":" + 用品名稱，所以不同分類的同名用品
+     （例如「尿布」同時出現在 01 與 05）會有各自獨立的 ID 與勾選狀態。
+     ========================================================= */
+  var CATS = [
+    { id: 'diaper', no: '01', name: '尿布與清潔', icon: 'diaper', items: ['尿布', '濕紙巾', '乾紙巾', '屁屁膏', '尿布墊', '垃圾袋／尿布袋', '寶寶沐浴用品', '寶寶乳液', '口水巾', '紗布巾'] },
+    { id: 'milk', no: '02', name: '奶瓶與喝奶', icon: 'bottle', items: ['奶瓶', '奶嘴頭', '奶粉／配方奶', '奶粉分裝盒', '保溫瓶', '水杯', '奶瓶清潔用品', '拋棄式奶瓶內袋（選用）', '備用奶瓶（選用）'] },
+    { id: 'food', no: '03', name: '寶寶飲食', icon: 'bowl', items: ['寶寶零食', '副食品／常溫寶寶粥', '餐具', '圍兜', '食物剪刀（確認航空攜帶規定）', '餐具清潔用品', '食物保鮮袋'] },
+    { id: 'clothes', no: '04', name: '衣物與穿搭', icon: 'shirt', items: ['上衣', '褲子', '睡衣', '襪子', '鞋子', '外套', '帽子', '備用衣物', '防水收納袋', '髒衣袋'] },
+    { id: 'carryon', no: '05', name: '隨身登機包', icon: 'backpack', items: ['尿布', '濕紙巾', '奶粉／奶', '奶瓶／水杯', '備用衣服', '小零食', '安撫玩具', '紗布巾', '塑膠袋', '旅行證件', '必要藥品'] },
+    { id: 'outing', no: '06', name: '外出用品', icon: 'stroller', items: ['嬰兒推車', '推車雨罩', '背巾／腰凳（選用）', '嬰兒毯', '防曬用品', '防蚊用品（依目的地）', '兒童安全座椅（依交通方式）', '寶寶常用藥品', '體溫計', '簡易急救用品'] },
+    { id: 'comfort', no: '07', name: '安撫與娛樂', icon: 'bear', items: ['寶寶喜歡的玩具', '安撫巾／安撫物', '繪本', '小零食', '睡覺習慣用品'] },
+    { id: 'docs', no: '08', name: '出國證件與重要事項', icon: 'passport', items: ['寶寶護照', '機票／訂位資料', '旅遊保險資料', '住宿資料', '必要的入境文件', '寶寶重要醫療資訊', '緊急聯絡資訊'] },
+    { id: 'winter', no: '09', name: '冬季旅行加強包', icon: 'snow', winter: true, items: ['保暖外套', '發熱內搭', '保暖褲', '毛帽', '手套', '厚襪子', '防滑／防水鞋', '圍巾／脖圍', '保暖毯', '推車防風用品', '保濕乳液', '護唇膏'] }
+  ];
+  CATS.forEach(function (c) {
+    c.items = c.items.map(function (n) {
+      var m = n.match(/^(.*?)（(.+)）$/);
+      return { id: c.id + ':' + n, name: m ? m[1] : n, note: m ? m[2] : '', custom: false };
+    });
+  });
+  var CAT_BY_ID = {};
+  CATS.forEach(function (c) { CAT_BY_ID[c.id] = c; });
+
+  /* 小型手繪風圖示 */
+  var S = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  var ICONS = {
+    diaper: S + '<path d="M3.4 7.6c2.9.6 5.8.9 8.6.9s5.7-.3 8.6-.9c.4 3.9-1.2 7.6-4.3 9.6-1.3.8-2.8 1.3-4.3 1.3s-3-.5-4.3-1.3C4.6 15.2 3 11.5 3.4 7.6z"/><path d="M8.2 12.6c1.1.9 2.4 1.4 3.8 1.4s2.7-.5 3.8-1.4"/></svg>',
+    bottle: S + '<path d="M10.1 4.9V3.6c0-.9.9-1.6 1.9-1.6s1.9.7 1.9 1.6v1.3"/><path d="M8.4 4.9h7.2v2.4H8.4z"/><path d="M8.9 7.3h6.2l.7 1.9v9.9c0 1.6-1.3 2.9-2.9 2.9h-1.8c-1.6 0-2.9-1.3-2.9-2.9V9.2z"/><path d="M12 11.6h2M12 14.6h2M12 17.6h2"/></svg>',
+    bowl: S + '<path d="M3 11.6h12.6c0 3.5-2.8 6.4-6.3 6.4S3 15.1 3 11.6z"/><path d="M6.6 20.6h5.4"/><path d="M19.2 3.6c1.1.2 1.8 1.4 1.6 2.8-.2 1.2-.9 2.1-1.8 2.3l-.2 11.8"/><path d="M5.6 8.6c.2-1 .9-1.6.6-2.6M9 8.6c.2-1 .9-1.6.6-2.6"/></svg>',
+    shirt: S + '<path d="M8.2 3.6L3.6 6.2l1.9 3.7 2.1-.9V20.2h8.8V9l2.1.9 1.9-3.7-4.6-2.6c-.6 1.4-2 2.3-3.8 2.3s-3.2-.9-3.8-2.3z"/><path d="M10.4 14.2h3.2"/></svg>',
+    backpack: S + '<path d="M6.6 9.2c0-3 2.4-5.4 5.4-5.4s5.4 2.4 5.4 5.4v9.6c0 .9-.7 1.6-1.6 1.6H8.2c-.9 0-1.6-.7-1.6-1.6z"/><path d="M10 3.9V3.2c0-.7.5-1.2 1.2-1.2h1.6c.7 0 1.2.5 1.2 1.2v.7"/><path d="M9.2 13h5.6v4H9.2zM9.2 15h5.6"/></svg>',
+    stroller: S + '<path d="M2.8 5.2h2.3l1.9 7.4"/><path d="M12.6 4.2c3.8.3 6.6 3.5 6.4 7.4v.9h-6.4z"/><path d="M7 12.6h12l-1.4 3.8H8.4z"/><circle cx="8.6" cy="19.2" r="1.7"/><circle cx="16.6" cy="19.2" r="1.7"/></svg>',
+    bear: S + '<circle cx="6.8" cy="7" r="2.3"/><circle cx="17.2" cy="7" r="2.3"/><path d="M12 6.4c-3.6 0-6.6 2.8-6.6 6.6s2.9 6.8 6.6 6.8 6.6-3 6.6-6.8-3-6.6-6.6-6.6z"/><ellipse cx="12" cy="15.2" rx="2.6" ry="2"/><path d="M9.4 11.4h.01M14.6 11.4h.01M12 14.6v.5" stroke-width="2.4"/></svg>',
+    passport: S + '<rect x="5.2" y="2.8" width="13.6" height="18.4" rx="2.4"/><circle cx="12" cy="10.4" r="3.3"/><path d="M8.7 10.4h6.6M12 7.1c-.9 1-1.3 2.1-1.3 3.3s.4 2.3 1.3 3.3c.9-1 1.3-2.1 1.3-3.3S12.9 8.1 12 7.1z" stroke-width="1.3"/><path d="M9 17h6"/></svg>',
+    snow: S + '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M9.8 4.6L12 6.4l2.2-1.8M9.8 19.4l2.2-1.8 2.2 1.8M4.5 10.6l2.7-.9-.5-2.8M19.5 13.4l-2.7.9.5 2.8M6.7 17.1l.5-2.8-2.7-.9M17.3 6.9l-.5 2.8 2.7.9"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.3L19 7.5"/></svg>',
+    chev: S + '<path d="M6.5 9.5l5.5 5.5 5.5-5.5"/></svg>',
+    trash: S + '<path d="M4.5 6.8h15M9.6 6.6V4.8c0-.6.5-1.1 1.1-1.1h2.6c.6 0 1.1.5 1.1 1.1v1.8M6.4 6.8l.9 12.2c.1 1 .9 1.7 1.8 1.7h5.8c1 0 1.7-.7 1.8-1.7l.9-12.2M10.2 10.6v6M13.8 10.6v6"/></svg>'
+  };
+
+  /* =========================================================
+     2. 狀態與 localStorage
+     ========================================================= */
+  var STORE_KEY = 'tina-baby-packing-list:v1';
+  var state = { checked: {}, custom: {}, winter: true, collapsed: {} };
+  var filter = 'all';
+  var storageOK = true;
+
+  function isObj(x) { return x && typeof x === 'object' && !Array.isArray(x); }
+
+  function load() {
+    try {
+      var t = '__tina_test__';
+      localStorage.setItem(t, '1'); localStorage.removeItem(t);
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return;
+      var d = JSON.parse(raw);
+      if (!isObj(d)) return;
+      if (isObj(d.checked)) {
+        Object.keys(d.checked).forEach(function (k) { if (d.checked[k] === true) state.checked[k] = true; });
+      }
+      if (isObj(d.custom)) {
+        Object.keys(d.custom).forEach(function (cid) {
+          if (!CAT_BY_ID[cid] || !Array.isArray(d.custom[cid])) return;
+          state.custom[cid] = d.custom[cid].filter(function (x) {
+            return x && typeof x.id === 'string' && typeof x.name === 'string' && x.name.trim();
+          }).map(function (x) { return { id: x.id, name: x.name.trim() }; });
+        });
+      }
+      if (typeof d.winter === 'boolean') state.winter = d.winter;
+      if (isObj(d.collapsed)) {
+        Object.keys(d.collapsed).forEach(function (k) { if (d.collapsed[k] === true) state.collapsed[k] = true; });
+      }
+    } catch (e) {
+      storageOK = false;
+    }
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    } catch (e) {
+      if (storageOK) {
+        storageOK = false;
+        showStorageWarning();
+      }
+    }
+  }
+
+  function showStorageWarning() {
+    var n = document.getElementById('storageNote');
+    n.classList.add('warn');
+    n.textContent = '⚠️ 這個瀏覽器目前無法自動儲存（可能是無痕模式或已關閉網站資料）。可以照常勾選，但關閉網頁後紀錄不會保留。';
+  }
+
+  function itemsOf(c) {
+    var custom = (state.custom[c.id] || []).map(function (x) {
+      return { id: x.id, name: x.name, note: '', custom: true };
+    });
+    return c.items.concat(custom);
+  }
+
+  /* =========================================================
+     3. 畫面
+     ========================================================= */
+  var listEl = document.getElementById('list');
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (ch) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+    });
+  }
+
+  function itemHTML(it) {
+    var done = !!state.checked[it.id];
+    return '<li class="item' + (done ? ' done' : '') + (it.custom ? ' custom' : '') + '" data-id="' + esc(it.id) + '">' +
+      '<label class="item-row">' +
+        '<input type="checkbox" class="cb" data-id="' + esc(it.id) + '"' + (done ? ' checked' : '') + '>' +
+        '<span class="box">' + ICONS.check + '</span>' +
+        '<span class="item-text"><span class="item-name">' + esc(it.name) + '</span>' +
+          (it.note ? '<span class="item-note">' + esc(it.note) + '</span>' : '') +
+          (it.custom ? '<span class="item-tag">自訂</span>' : '') +
+        '</span>' +
+      '</label>' +
+      (it.custom ? '<button type="button" class="del" data-action="del" data-id="' + esc(it.id) + '" aria-label="刪除「' + esc(it.name) + '」">' + ICONS.trash + '</button>' : '') +
+    '</li>';
+  }
+
+  function catHTML(c) {
+    var collapsed = !!state.collapsed[c.id];
+    return '<section class="card cat' + (c.winter ? ' cat-winter' : '') + '" id="cat-' + c.id + '" data-cat="' + c.id + '">' +
+      '<h2 class="cat-h"><button type="button" class="cat-head" data-action="toggle-cat" aria-expanded="' + (!collapsed) + '" aria-controls="body-' + c.id + '">' +
+        '<span class="cat-icon">' + ICONS[c.icon] + '</span>' +
+        '<span class="cat-title"><span class="cat-no">' + c.no + '</span><span class="cat-name">' + c.name + '</span></span>' +
+        '<span class="cat-count" aria-label="已完成數量"><span class="cc-done">0</span>/<span class="cc-total">0</span></span>' +
+        '<span class="chev">' + ICONS.chev + '</span>' +
+      '</button></h2>' +
+      '<div class="cat-body" id="body-' + c.id + '"' + (collapsed ? ' hidden' : '') + '>' +
+        '<ul class="items"></ul>' +
+        '<p class="all-done-note">這一類都打包好了 ✓</p>' +
+        '<div class="add-wrap">' +
+          '<button type="button" class="add-open" data-action="open-add">＋ 新增用品</button>' +
+          '<form class="add-form" data-cat="' + c.id + '" hidden novalidate>' +
+            '<input type="text" class="add-input" maxlength="30" placeholder="例如：寶寶最愛的小熊" aria-label="新增到「' + c.name + '」的用品名稱" enterkeyhint="done" autocomplete="off">' +
+            '<button type="submit" class="btn btn-primary">新增</button>' +
+            '<button type="button" class="btn btn-ghost" data-action="close-add">取消</button>' +
+            '<p class="add-hint" aria-live="polite"></p>' +
+          '</form>' +
+        '</div>' +
+      '</div>' +
+    '</section>';
+  }
+
+  function renderItems(c) {
+    var sec = document.getElementById('cat-' + c.id);
+    sec.querySelector('.items').innerHTML = itemsOf(c).map(itemHTML).join('');
+  }
+
+  function renderAll() {
+    listEl.innerHTML = CATS.map(catHTML).join('');
+    CATS.forEach(renderItems);
+    applyWinter();
+    updateCounts();
+  }
+
+  function applyWinter() {
+    document.getElementById('cat-winter').hidden = !state.winter;
+    document.getElementById('winterToggle').checked = state.winter;
+    document.getElementById('winterDesc').textContent = state.winter
+      ? '已開啟：顯示並列入打包進度'
+      : '已隱藏：不列入打包進度';
+  }
+
+  var progressCard = document.getElementById('progressCard');
+  function updateCounts() {
+    var D = 0, T = 0;
+    CATS.forEach(function (c) {
+      var sec = document.getElementById('cat-' + c.id);
+      var items = itemsOf(c);
+      var d = 0;
+      items.forEach(function (it) { if (state.checked[it.id]) d++; });
+      sec.querySelector('.cc-done').textContent = d;
+      sec.querySelector('.cc-total').textContent = items.length;
+      sec.classList.toggle('all-done', items.length > 0 && d === items.length);
+      sec.classList.toggle('none-left', !sec.querySelector('.item:not(.done), .item.lingering'));
+      if (c.winter && !state.winter) return; // 隱藏的冬季分類不列入總數
+      D += d; T += items.length;
+    });
+    var pct = T ? Math.floor(D / T * 100) : 0; // 無條件捨去：只有真的全部完成才會顯示 100%
+    var complete = T > 0 && D === T;
+    document.getElementById('doneN').textContent = D;
+    document.getElementById('totalN').textContent = T;
+    document.getElementById('pctN').textContent = pct + '%';
+    document.getElementById('barFill').style.width = pct + '%';
+    document.getElementById('bar').setAttribute('aria-valuenow', pct);
+    document.getElementById('miniTxt').textContent = D + ' / ' + T;
+    document.getElementById('miniPct').textContent = pct + '%';
+    document.getElementById('miniFill').style.width = pct + '%';
+    progressCard.classList.toggle('complete', complete);
+    var msg;
+    if (complete) msg = '全部打包完成！準備帶寶寶出發啦 ✈️';
+    else if (D === 0) msg = '從最重要的證件和隨身包開始吧！';
+    else if (pct < 50) msg = '慢慢來，一項一項打包就好 🧳';
+    else if (pct < 85) msg = '已經超過一半了，好棒！';
+    else msg = '快完成了，再檢查一下就好 ♡';
+    document.getElementById('progressMsg').textContent = msg;
+  }
+
+  /* =========================================================
+     4. 互動
+     ========================================================= */
+  // 勾選（整行都是 <label>，點哪裡都能勾）
+  listEl.addEventListener('change', function (e) {
+    var cb = e.target;
+    if (!cb.classList || !cb.classList.contains('cb')) return;
+    var id = cb.getAttribute('data-id');
+    var li = cb.closest('.item');
+    if (cb.checked) state.checked[id] = true; else delete state.checked[id];
+    li.classList.toggle('done', cb.checked);
+    if (cb.checked && filter === 'todo') {
+      // 「只看未完成」時，勾完稍等一下再收起來，讓使用者看得到自己勾了
+      li.classList.add('lingering');
+      setTimeout(function () { li.classList.remove('lingering'); updateCounts(); }, 450);
+    }
+    save();
+    updateCounts();
+  });
+
+  listEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    var sec = btn.closest('.cat');
+    var cid = sec && sec.getAttribute('data-cat');
+    var action = btn.getAttribute('data-action');
+
+    if (action === 'toggle-cat') {
+      setCollapsed(cid, btn.getAttribute('aria-expanded') === 'true');
+      save();
+    } else if (action === 'open-add') {
+      var form = sec.querySelector('.add-form');
+      btn.hidden = true;
+      form.hidden = false;
+      form.querySelector('.add-input').focus();
+    } else if (action === 'close-add') {
+      closeAdd(sec);
+    } else if (action === 'del') {
+      deleteCustom(cid, btn.getAttribute('data-id'));
+    }
+  });
+
+  function setCollapsed(cid, collapsed) {
+    var sec = document.getElementById('cat-' + cid);
+    sec.querySelector('.cat-head').setAttribute('aria-expanded', String(!collapsed));
+    sec.querySelector('.cat-body').hidden = collapsed;
+    if (collapsed) state.collapsed[cid] = true; else delete state.collapsed[cid];
+  }
+
+  function closeAdd(sec) {
+    var form = sec.querySelector('.add-form');
+    form.hidden = true;
+    form.querySelector('.add-input').value = '';
+    form.querySelector('.add-hint').textContent = '';
+    sec.querySelector('.add-open').hidden = false;
+  }
+
+  // 新增自訂用品
+  listEl.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (!form.classList.contains('add-form')) return;
+    e.preventDefault();
+    var cid = form.getAttribute('data-cat');
+    var c = CAT_BY_ID[cid];
+    var input = form.querySelector('.add-input');
+    var hint = form.querySelector('.add-hint');
+    var name = input.value.replace(/[\s　]+/g, ' ').trim();
+    if (!name) {
+      hint.textContent = '請先輸入用品名稱喔';
+      input.focus();
+      return;
+    }
+    var key = name.toLowerCase();
+    var dup = itemsOf(c).some(function (it) { return it.name.toLowerCase() === key; });
+    if (dup) {
+      hint.textContent = '「' + name + '」已經在這個分類裡囉';
+      input.select();
+      return;
+    }
+    var id = 'custom:' + cid + ':' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    (state.custom[cid] = state.custom[cid] || []).push({ id: id, name: name });
+    input.value = '';     // 立刻清空，避免連點造成重複
+    hint.textContent = '';
+    save();
+    renderItems(c);
+    updateCounts();
+    input.focus();
+    toast('已新增「' + name + '」');
+  });
+
+  // 中文輸入法選字時按 Enter，不要誤送出
+  listEl.addEventListener('keydown', function (e) {
+    if (e.target.classList && e.target.classList.contains('add-input')) {
+      if (e.key === 'Enter' && (e.isComposing || e.keyCode === 229)) e.preventDefault();
+      if (e.key === 'Escape') closeAdd(e.target.closest('.cat'));
+    }
+  });
+  listEl.addEventListener('input', function (e) {
+    if (e.target.classList && e.target.classList.contains('add-input')) {
+      e.target.closest('.add-form').querySelector('.add-hint').textContent = '';
+    }
+  });
+
+  function deleteCustom(cid, id) {
+    var arr = state.custom[cid] || [];
+    var idx = -1;
+    for (var i = 0; i < arr.length; i++) if (arr[i].id === id) { idx = i; break; }
+    if (idx < 0) return;
+    var removed = arr.splice(idx, 1)[0];
+    var wasChecked = !!state.checked[id];
+    delete state.checked[id];
+    save();
+    renderItems(CAT_BY_ID[cid]);
+    updateCounts();
+    toast('已刪除「' + removed.name + '」', '復原', function () {
+      (state.custom[cid] = state.custom[cid] || []).splice(idx, 0, removed);
+      if (wasChecked) state.checked[id] = true;
+      save();
+      renderItems(CAT_BY_ID[cid]);
+      updateCounts();
+    });
+  }
+
+  // 篩選
+  var fAll = document.getElementById('fAll'), fTodo = document.getElementById('fTodo');
+  function setFilter(f) {
+    filter = f;
+    fAll.setAttribute('aria-pressed', String(f === 'all'));
+    fTodo.setAttribute('aria-pressed', String(f === 'todo'));
+    listEl.classList.toggle('filter-todo', f === 'todo');
+    updateCounts();
+  }
+  fAll.addEventListener('click', function () { setFilter('all'); });
+  fTodo.addEventListener('click', function () { setFilter('todo'); });
+
+  // 展開／收合全部
+  document.getElementById('expandAll').addEventListener('click', function () {
+    CATS.forEach(function (c) { setCollapsed(c.id, false); }); save();
+  });
+  document.getElementById('collapseAll').addEventListener('click', function () {
+    CATS.forEach(function (c) { setCollapsed(c.id, true); }); save();
+  });
+
+  // 冬季模式
+  document.getElementById('winterToggle').addEventListener('change', function (e) {
+    state.winter = e.target.checked;
+    applyWinter();
+    updateCounts();
+    save();
+    toast(state.winter ? '已開啟冬季旅行加強包 ❄️' : '已隱藏冬季分類，進度已重新計算');
+  });
+
+  // 重設（二次確認）
+  var modal = document.getElementById('resetModal');
+  var lastFocus = null;
+  function openModal() {
+    lastFocus = document.activeElement;
+    document.getElementById('resetCustom').checked = false;
+    modal.hidden = false;
+    document.getElementById('resetCancel').focus();
+  }
+  function closeModal() {
+    modal.hidden = true;
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  document.getElementById('resetBtn').addEventListener('click', openModal);
+  document.getElementById('resetCancel').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+  document.getElementById('resetConfirm').addEventListener('click', function () {
+    var alsoCustom = document.getElementById('resetCustom').checked;
+    state.checked = {};
+    if (alsoCustom) state.custom = {};
+    save();
+    CATS.forEach(renderItems);
+    updateCounts();
+    closeModal();
+    toast(alsoCustom ? '已重設勾選，並刪除自訂用品' : '已重設勾選（自訂用品已保留）');
+  });
+
+  // 列印／另存 PDF
+  var inFrame = false;
+  try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+  document.getElementById('printBtn').addEventListener('click', function () {
+    document.getElementById('printDate').textContent = new Date().toLocaleDateString('zh-TW');
+    try { window.print(); } catch (e) {}
+    if (inFrame) toast('預覽模式可能無法列印，部署成網站後即可使用');
+  });
+
+  // 分享
+  function cleanUrl() { return location.href.split('#')[0]; }
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return legacyCopy(text); });
+    }
+    return Promise.resolve(legacyCopy(text));
+  }
+  function legacyCopy(text) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.fontSize = '16px';
+      document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, text.length);
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch (e) { return false; }
+  }
+  document.getElementById('shareBtn').addEventListener('click', function () {
+    var url = cleanUrl();
+    var data = { title: 'Tina 媽媽的寶寶出國打包清單', text: '第一次帶寶寶出國也不慌張，一起把行李準備好！', url: url };
+    var fallback = function () {
+      copyText(url).then(function (ok) {
+        toast(ok ? '已複製網頁連結，可以貼給朋友囉 ♡' : '請複製網址分享：' + url);
+      });
+    };
+    if (navigator.share) {
+      navigator.share(data).catch(function (err) {
+        if (!err || err.name !== 'AbortError') fallback();
+      });
+    } else {
+      fallback();
+    }
+  });
+
+  // Toast
+  var toastEl = document.getElementById('toast');
+  var toastMsg = document.getElementById('toastMsg');
+  var toastAct = document.getElementById('toastAction');
+  var toastTimer = null, toastFn = null;
+  function toast(msg, actionLabel, fn) {
+    toastMsg.textContent = msg;
+    toastFn = fn || null;
+    toastAct.hidden = !fn;
+    if (fn) toastAct.textContent = actionLabel;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); toastFn = null; }, fn ? 5000 : 2400);
+  }
+  toastAct.addEventListener('click', function () {
+    var f = toastFn; toastFn = null;
+    toastEl.classList.remove('show');
+    if (f) f();
+  });
+
+  // 往下滑時顯示頂端的小進度條
+  var mini = document.getElementById('mini');
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      mini.classList.toggle('show', !entries[0].isIntersecting);
+    }).observe(progressCard);
+  }
+
+  /* 啟動 */
+  load();
+  renderAll();
+  if (!storageOK) showStorageWarning();
+})();
+</script>
+</body>
+</html>
